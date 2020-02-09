@@ -4,12 +4,17 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import Firebase, {FirebaseContext} from './server';
+import { initialState } from './sesion/initialState'
+import { StateProvider } from './sesion/store'
+import sesionReducer from './sesion/reducers/sesionReducer';
+import { mainReducer } from './sesion/reducers';
 
-// const FirebaseContext = React.createContext();
 
 ReactDOM.render(
 <FirebaseContext.Provider value={ new Firebase()}>
-    <App />
+    <StateProvider initialState={initialState} reducer={mainReducer}>
+        <App />
+    </StateProvider>
 </FirebaseContext.Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

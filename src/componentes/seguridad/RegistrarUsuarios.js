@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { Container, Avatar, Typography, Grid, TextField, Button } from '@material-ui/core';
 import LockOutLineIcon from '@material-ui/icons/LockOutlined';
 import { compose } from 'recompose';
-import { consumerFirebase, FirebaseContext } from '../../server';
+import { consumerFirebase } from '../../server';
+import { crearUsuario } from '../../sesion/actions/sesionAction';
+import { StateContext } from '../../sesion/store';
+import {openMensajePantalla} from '../../sesion/actions/snackbarAction';
+
 
 const style = {
     paper: {
@@ -25,14 +29,15 @@ const style = {
     }
 }
 
-const usuarioInicial = {
-    nombre: '',
-    apellido: '',
-    email: '',
-    password: ''
-}
+// const usuarioInicial = {
+//     nombre: '',
+//     apellido: '',
+//     email: '',
+//     password: ''
+// }
 
 class RegistrarUsuarios extends Component {
+    static contextType = StateContext;
 
     state = {
         firebase: null,
@@ -63,23 +68,53 @@ class RegistrarUsuarios extends Component {
         })
     }
 
-    registrarUsuario = e => {
+    registrarUsuario = async e => {
         e.preventDefault();
-        console.log('Imprimir state usuario: ', this.state.usuario);
-        const { usuario, firebase } = this.state;
 
-        firebase.db
-        .collection("Users")
-        .add(usuario)
-        .then(usuarioAfter => {
-            console.log('Insercion con exito', usuarioAfter);
-            this.setState({
-                usuario: usuarioInicial
-            })
-        })
-        .catch(error => {
-            console.log('Error: ', error);
-        })
+        const [{sesion}, dispatch] = this.context; // state global
+        const {firebase, usuario} = this.state; // state local
+
+        let callback = await crearUsuario(dispatch, firebase, usuario);
+        if(callback.status){
+            this.props.history.push("/")
+        }else{
+           openMensajePantalla(dispatch,{
+               open : true,
+               mensaje : callback.mensaje.message
+           }) 
+        }
+
+        // console.log('Imprimir state usuario: ', this.state.usuario);
+        // const { usuario, firebase } = this.state;
+
+        // firebase.auth
+        // .createUserWithEmailAndPassword(usuario.email, usuario.password)
+        // .then(auth => {
+
+        //     const usuarioDB = {
+        //         usuarioid: auth.user.uid,
+        //         email: usuario.email,
+        //         nombre: usuario.nombre,
+        //         apellido: usuario.apellido
+        //     }
+
+        //     firebase.db
+        //     .collection("Users")
+        //     .add(usuarioDB)
+        //     .then(usuarioAfter => {
+        //         console.log('Insercion con exito', usuarioAfter);
+        //         this.setState({
+        //             usuario: usuarioInicial
+        //         })
+        //         this.props.history.push('/');
+        //     })
+        //     .catch(error => {
+        //         console.log('Error: ', error);
+        //     })
+        // })
+        // .catch(error => {
+        //     console.log( error );
+        // })
 
     }
 
