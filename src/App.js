@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import ListaInmuebles from './componentes/vistas/ListaInmuebles';
 import Grid from '@material-ui/core/Grid';

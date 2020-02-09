@@ -56,8 +56,11 @@ export const crearUsuario = (dispatch, firebase, usuario) => {
 }
 
 export const salirSesion = (dispatch, firebase) => {
+    
     return new Promise((resolve, reject) => {
-        firebase.auth.signOut().then(salir => {
+        firebase.auth
+        .signOut()
+        .then(salir => {
             dispatch({
                 type: 'SALIR_SESSION',
                 nuevoUsuario: {
@@ -71,7 +74,6 @@ export const salirSesion = (dispatch, firebase) => {
                 autenticado: false
             })
             resolve();
-        })
-        .catch()
+        });
     })
 }
