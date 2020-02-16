@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/storage';
 
 
 const config = {
@@ -20,6 +21,7 @@ class Firebase {
         app.initializeApp(config);
         this.db = app.firestore();
         this.auth = app.auth();
+        this.storage = app.storage();
     }
 
     estaIniciado() {
@@ -27,6 +29,14 @@ class Firebase {
             this.auth.onAuthStateChanged(resolve)
         })
     }
+
+    guardarDocumento = (nombreDocumento, documento) => this.storage.ref().child(nombreDocumento).put(documento);
+    
+    devolverDocumento = (documentoUrl) => this.storage.ref().child(documentoUrl).getDownloadURL();
+
+    // guardarDocumentos = (documentos) => this.storage.ref().guardarDocumentos(documentos);
+
+    // eliminarDocumento = documento => this.storage.ref().child(documento).delete();
 
 }
 

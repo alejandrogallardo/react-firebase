@@ -11,6 +11,9 @@ import Login from './componentes/seguridad/Login';
 import { FirebaseContext } from './server';
 import { useStateValue } from './sesion/store'; // representacion del context provider
 import { Snackbar } from '@material-ui/core';
+import RutaAutenticada from './componentes/seguridad/RutaAutenticada';
+import PerfilUsuario from './componentes/seguridad/PerfilUsuario';
+
 
 
 function App(props) {
@@ -57,7 +60,10 @@ function App(props) {
           <AppNavBar />
           <Grid container>
             <Switch>
-              <Route path="/" exact component={ListaInmuebles}></Route>
+              {/* <Route path="/" exact component={ListaInmuebles}></Route> */ } 
+              <RutaAutenticada exact path="/" autenticadoFirebase={firebase.auth.currentUser} component={ListaInmuebles} />
+              <RutaAutenticada exact path="/auth/perfil" autenticadoFirebase={firebase.auth.currentUser} component={PerfilUsuario} />
+
               <Route path="/auth/registrarUsuario" exact component={RegistrarUsuario}></Route>
               <Route path="/auth/login" exact component={Login}></Route>
             </Switch>
@@ -65,10 +71,8 @@ function App(props) {
         </MuiThemeProvider>
       </Router>
     </React.Fragment>
-  )
-  :
-  null
-};
+  ) : null;
+}
 
 
 
